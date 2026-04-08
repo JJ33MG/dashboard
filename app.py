@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from streamlit_autorefresh import st_autorefresh
 import pandas as pd
@@ -11,7 +12,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-SLIDE_DURATION_MS = 15_000   # 15 seconden per slide — pas dit aan naar wens
+SLIDE_DURATION_MS = 15_000
 count = st_autorefresh(interval=SLIDE_DURATION_MS, limit=None, key="tv")
 
 st.markdown("""
@@ -44,8 +45,9 @@ st.markdown("""
 
 @st.cache_data(ttl=60)
 def load():
-    team   = pd.read_csv("data/team_data.csv")
-    budget = pd.read_csv("data/budget.csv")
+    base   = os.path.dirname(os.path.abspath(__file__))
+    team   = pd.read_csv(os.path.join(base, "data", "team_data.csv"))
+    budget = pd.read_csv(os.path.join(base, "data", "budget.csv"))
     return team, budget
 
 team_df, budget_df = load()
